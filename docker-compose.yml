@@ -23,3 +23,14 @@ services:
       - ./backend:/app
     environment:
       - GO_ENV=development
+    depends_on:
+      - postgres
+
+  postgres:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
