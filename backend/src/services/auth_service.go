@@ -87,4 +87,27 @@ func (s *AuthService) Logout(token string) error {
 	// In a real application, you might want to blacklist the token
 	// For now, we'll just return nil as JWT tokens are stateless
 	return nil
+}
+
+func (s *AuthService) GeneratePasswordResetToken(email string) (string, error) {
+	// Check if user exists
+	user, err := s.userRepo.FindByEmail(email)
+	if err != nil {
+		return "", errors.New("user not found")
+	}
+
+	// Generate reset token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": user.ID,
+		"email":   user.Email,
+		"purpose": "password_reset",
+		"exp":     time.Now().Add(1 * time.Hour).Unix(), // Reset token expires in 1 hour
+	})
+
+	tokenString, err := token.SignedString(s.jwtSecret)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
 } 
