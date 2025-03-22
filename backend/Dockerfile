@@ -3,14 +3,14 @@ FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
-# Copy go mod and sum files
-COPY go.mod go.sum ./
-
-# Download all dependencies
-RUN go mod download
+# Initialize Go module
+RUN go mod init ecommerce
 
 # Copy the source code
 COPY . .
+
+# Download all dependencies
+RUN go mod tidy
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
