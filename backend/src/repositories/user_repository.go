@@ -34,4 +34,8 @@ func (r *UserRepository) ExistsByEmail(email string) (bool, error) {
 		return false, err
 	}
 	return count > 0, nil
+}
+
+func (r *UserRepository) UpdatePassword(userID uint, hashedPassword string) error {
+	return r.db.Model(&models.User{}).Where("id = ?", userID).Update("password", hashedPassword).Error
 } 
