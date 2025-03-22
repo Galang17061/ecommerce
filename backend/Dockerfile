@@ -3,14 +3,12 @@ FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
-# Initialize Go module
-RUN go mod init ecommerce
-
-# Copy the source code
+# Copy the source code first
 COPY . .
 
-# Download all dependencies
-RUN go mod tidy
+# Initialize Go module and download dependencies
+RUN go mod init ecommerce && \
+    go mod tidy
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
@@ -20,8 +18,9 @@ FROM alpine:latest
 
 WORKDIR /app
 
-# Copy the binary from builder
+# Copy the binary from builder and make it executable
 COPY --from=builder /app/main .
+RUN chmod +x main
 
 # Expose port 8080
 EXPOSE 8080
