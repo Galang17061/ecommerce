@@ -52,4 +52,33 @@ func (s *AuthService) Register(username, email, password string) (*models.User, 
 	}
 
 	return user, nil
+}
+
+func (s *AuthService) Login(email, password string) (string, error) {
+	// Get user by email
+	user, err := s.userRepo.FindByEmail(email)
+	if err != nil {
+		return "", errors.New("invalid credentials")
+	}
+
+	// Check password
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return "", errors.New("invalid credentials")
+	}
+
+	// Generate JWT token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": user.ID,
+		"email":   user.Email,
+		"role":    user.Role,
+		"exp":     time.Now().Add(s.tokenExpiry).Unix(),
+	})
+
+	tokenString, err := token.SignedString(s.jwtSecret)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
 } 
