@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaShoppingBag, FaUser, FaLock } from 'react-icons/fa';
+import { TextField, Button, Link } from '../components/ui';
 import './Login.css';
 
 const Login = () => {
@@ -44,31 +45,27 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <div className="input-group">
-              <FaUser className="input-icon" />
-              <input
-                type="email"
-                name="email"
-                placeholder="Email Address"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <TextField
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              icon={FaUser}
+            />
           </div>
 
           <div className="form-group">
-            <div className="input-group">
-              <FaLock className="input-icon" />
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <TextField
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              icon={FaLock}
+            />
           </div>
 
           <div className="form-options">
@@ -76,42 +73,27 @@ const Login = () => {
               <input type="checkbox" />
               <span>Remember me</span>
             </label>
-            <a href="#" className="forgot-password">Forgot Password?</a>
+            <Link to="/forgot-password">Forgot Password?</Link>
           </div>
 
-          <motion.button
-            type="submit"
-            className="login-button"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
+          <Button type="submit" variant="primary" fullWidth>
             Login
-          </motion.button>
+          </Button>
 
           <div className="social-login">
             <p>Or login with</p>
             <div className="social-buttons">
-              <motion.button
-                type="button"
-                className="social-button google"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <Button variant="google">
                 Google
-              </motion.button>
-              <motion.button
-                type="button"
-                className="social-button facebook"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              </Button>
+              <Button variant="facebook">
                 Facebook
-              </motion.button>
+              </Button>
             </div>
           </div>
 
           <div className="register-link">
-            Don't have an account? <a href="#">Register</a>
+            Don't have an account? <Link to="/register">Register</Link>
           </div>
         </form>
       </motion.div>
