@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
-	"ecommerce/src/config"
-	"ecommerce/src/controllers"
-	"ecommerce/src/repositories"
-	"ecommerce/src/routes"
-	"ecommerce/src/services"
+	"ecommerce/backend/src/config"
+	"ecommerce/backend/src/controllers"
+	"ecommerce/backend/src/repositories"
+	"ecommerce/backend/src/routes"
+	"ecommerce/backend/src/services"
 )
 
 func main() {

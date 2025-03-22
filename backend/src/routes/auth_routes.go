@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 
-	"ecommerce/src/controllers"
+	"ecommerce/backend/src/controllers"
 )
 
 func SetupAuthRoutes(router *gin.Engine, authController *controllers.AuthController) {
