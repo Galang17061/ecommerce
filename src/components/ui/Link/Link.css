@@ -1,0 +1,21 @@
+.custom-link {
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.custom-link.primary {
+  color: #764ba2;
+}
+
+.custom-link.primary:hover {
+  text-decoration: underline;
+}
+
+.custom-link.secondary {
+  color: #718096;
+}
+
+.custom-link.secondary:hover {
+  color: #764ba2;
+} 
