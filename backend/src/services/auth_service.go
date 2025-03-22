@@ -81,4 +81,10 @@ func (s *AuthService) Login(email, password string) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func (s *AuthService) Logout(token string) error {
+	// In a real application, you might want to blacklist the token
+	// For now, we'll just return nil as JWT tokens are stateless
+	return nil
 } 
