@@ -6,6 +6,7 @@ import (
 	"ecommerce/backend/src/controllers"
 )
 
+// SetupAuthRoutes configures all the authentication routes
 func SetupAuthRoutes(router *gin.Engine, authController *controllers.AuthController) {
 	auth := router.Group("/api/auth")
 	{
