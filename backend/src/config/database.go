@@ -7,7 +7,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"ecommerce/src/models"
+	"ecommerce/backend/src/models"
 )
 
 func NewDB() (*gorm.DB, error) {

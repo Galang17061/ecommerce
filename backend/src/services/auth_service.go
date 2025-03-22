@@ -7,8 +7,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"github.com/golang-jwt/jwt/v5"
 
-	"ecommerce/src/models"
-	"ecommerce/src/repositories"
+	"ecommerce/backend/src/models"
+	"ecommerce/backend/src/repositories"
 )
 
 type AuthService struct {

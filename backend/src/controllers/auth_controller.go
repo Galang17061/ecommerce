@@ -5,8 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"ecommerce/src/models"
-	"ecommerce/src/services"
+	"ecommerce/backend/src/services"
 )
 
 type AuthController struct {
@@ -129,4 +128,4 @@ func (c *AuthController) ResetPassword(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Password reset successfully"})
-} 
+}

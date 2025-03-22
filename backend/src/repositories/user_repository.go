@@ -3,7 +3,7 @@ package repositories
 import (
 	"gorm.io/gorm"
 
-	"ecommerce/src/models"
+	"ecommerce/backend/src/models"
 )
 
 type UserRepository struct {
