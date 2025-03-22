@@ -4,6 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"ecommerce/src/models"
+	"ecommerce/src/services"
 )
 
 type AuthController struct {
