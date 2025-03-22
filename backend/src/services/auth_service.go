@@ -110,4 +110,43 @@ func (s *AuthService) GeneratePasswordResetToken(email string) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func (s *AuthService) ResetPassword(resetToken, newPassword string) error {
+	// Validate reset token
+	token, err := jwt.Parse(resetToken, func(token *jwt.Token) (interface{}, error) {
+		return s.jwtSecret, nil
+	})
+
+	if err != nil || !token.Valid {
+		return errors.New("invalid or expired reset token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return errors.New("invalid token claims")
+	}
+
+	// Check if token is for password reset
+	purpose, ok := claims["purpose"].(string)
+	if !ok || purpose != "password_reset" {
+		return errors.New("invalid token purpose")
+	}
+
+	// Get user ID from token
+	userID := uint(claims["user_id"].(float64))
+
+	// Hash new password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	// Update password in database
+	err = s.userRepo.UpdatePassword(userID, string(hashedPassword))
+	if err != nil {
+		return err
+	}
+
+	return nil
 } 
