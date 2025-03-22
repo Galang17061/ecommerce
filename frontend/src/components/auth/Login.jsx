@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaShoppingBag, FaUser, FaLock } from 'react-icons/fa';
-import { TextField, Button, Link } from '../components/ui';
+import { TextField, Button, Link } from '../../components/ui';
 import './Login.css';
 
 const Login = () => {
