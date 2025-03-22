@@ -1,0 +1,53 @@
+.button {
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.button.full-width {
+  width: 100%;
+}
+
+.button.primary {
+  background: #764ba2;
+  color: white;
+}
+
+.button.primary:hover {
+  background: #667eea;
+}
+
+.button.secondary {
+  background: white;
+  color: #2d3748;
+  border: 2px solid #e2e8f0;
+}
+
+.button.secondary:hover {
+  border-color: #764ba2;
+  color: #764ba2;
+}
+
+.button.google {
+  background: white;
+  color: #db4437;
+  border: 2px solid #e2e8f0;
+}
+
+.button.google:hover {
+  border-color: #db4437;
+}
+
+.button.facebook {
+  background: white;
+  color: #4267b2;
+  border: 2px solid #e2e8f0;
+}
+
+.button.facebook:hover {
+  border-color: #4267b2;
+} 
