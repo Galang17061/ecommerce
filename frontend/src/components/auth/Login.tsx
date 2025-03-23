@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingBag, FaUser, FaLock } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import '../../../styles/auth/auth.styles.css';
+import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
