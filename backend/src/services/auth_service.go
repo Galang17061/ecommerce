@@ -152,4 +152,49 @@ func (s *AuthService) ResetPassword(resetToken, newPassword string) error {
 	}
 
 	return nil
+}
+
+func (s *AuthService) VerifyToken(tokenString string) (bool, error) {
+	// Parse and validate the token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Validate signing method
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid signing method")
+		}
+		return s.jwtSecret, nil
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	// Check if token is valid
+	if !token.Valid {
+		return false, errors.New("invalid token")
+	}
+
+	// Get claims
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return false, errors.New("invalid token claims")
+	}
+
+	// Check expiration
+	exp, ok := claims["exp"].(float64)
+	if !ok {
+		return false, errors.New("invalid expiration claim")
+	}
+
+	if float64(time.Now().Unix()) > exp {
+		return false, errors.New("token expired")
+	}
+
+	// Check if user still exists
+	userID := uint(claims["user_id"].(float64))
+	_, err = s.userRepo.FindByID(userID)
+	if err != nil {
+		return false, errors.New("user not found")
+	}
+
+	return true, nil
 } 

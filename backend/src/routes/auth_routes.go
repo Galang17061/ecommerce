@@ -15,5 +15,6 @@ func SetupAuthRoutes(router *gin.Engine, authController *controllers.AuthControl
 		auth.POST("/logout", authController.Logout)
 		auth.POST("/forgot-password", authController.ForgotPassword)
 		auth.POST("/reset-password", authController.ResetPassword)
+		auth.GET("/verify", authController.VerifyToken)
 	}
 } 
