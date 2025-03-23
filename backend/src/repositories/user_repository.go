@@ -66,4 +66,13 @@ func (r *UserRepository) List(limit, offset int) ([]models.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func (r *UserRepository) ExistsById(id uint) (bool, error) {
+	var count int64
+	err := r.db.Model(&models.User{}).Where("id = ?", id).Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 } 

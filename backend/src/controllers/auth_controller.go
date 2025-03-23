@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -129,43 +128,4 @@ func (c *AuthController) ResetPassword(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Password reset successfully"})
-}
-
-func (c *AuthController) VerifyToken(ctx *gin.Context) {
-	// Get token from Authorization header
-	authHeader := ctx.GetHeader("Authorization")
-	if authHeader == "" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"valid": false,
-			"message": "No token provided",
-		})
-		return
-	}
-
-	// Check if the header starts with "Bearer "
-	if !strings.HasPrefix(authHeader, "Bearer ") {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"valid": false,
-			"message": "Invalid token format",
-		})
-		return
-	}
-
-	// Extract the token
-	token := strings.TrimPrefix(authHeader, "Bearer ")
-
-	// Verify the token
-	isValid, err := c.authService.VerifyToken(token)
-	if err != nil || !isValid {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"valid": false,
-			"message": "Invalid token",
-		})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"valid": true,
-		"message": "Token is valid",
-	})
 }

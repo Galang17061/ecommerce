@@ -2,6 +2,8 @@ package services
 
 import (
 	"errors"
+	"strings"
+	"sync"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -15,6 +17,8 @@ type AuthService struct {
 	userRepo    *repositories.UserRepository
 	jwtSecret   []byte
 	tokenExpiry time.Duration
+	blacklist   map[string]time.Time
+	mutex       sync.RWMutex
 }
 
 func NewAuthService(userRepo *repositories.UserRepository, jwtSecret string) *AuthService {
@@ -22,6 +26,7 @@ func NewAuthService(userRepo *repositories.UserRepository, jwtSecret string) *Au
 		userRepo:    userRepo,
 		jwtSecret:   []byte(jwtSecret),
 		tokenExpiry: 24 * time.Hour, // Token expires in 24 hours
+		blacklist:   make(map[string]time.Time),
 	}
 }
 
@@ -86,10 +91,112 @@ func (s *AuthService) Login(email, password string) (string, error) {
 	return tokenString, nil
 }
 
-func (s *AuthService) Logout(token string) error {
-	// In a real application, you might want to blacklist the token
-	// For now, we'll just return nil as JWT tokens are stateless
+func (s *AuthService) Logout(tokenString string) error {
+	// Remove "Bearer " prefix if present
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+
+	// Parse the token to verify it's valid and get the expiration time
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return s.jwtSecret, nil
+	})
+
+	if err != nil {
+		return errors.New("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return errors.New("invalid token claims")
+	}
+
+	// Get token expiration time
+	exp, ok := claims["exp"].(float64)
+	if !ok {
+		return errors.New("invalid token expiration")
+	}
+
+	// Add token to blacklist
+	s.mutex.Lock()
+	s.blacklist[tokenString] = time.Unix(int64(exp), 0)
+	s.mutex.Unlock()
+
+	// Start cleanup goroutine
+	go s.cleanupBlacklist()
+
 	return nil
+}
+
+func (s *AuthService) cleanupBlacklist() {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	now := time.Now()
+	for token, expiry := range s.blacklist {
+		if now.After(expiry) {
+			delete(s.blacklist, token)
+		}
+	}
+}
+
+func (s *AuthService) isTokenBlacklisted(tokenString string) bool {
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
+
+	_, blacklisted := s.blacklist[tokenString]
+	return blacklisted
+}
+
+func (s *AuthService) VerifyToken(tokenString string) (bool, error) {
+	// Remove "Bearer " prefix if present
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+
+	// Check if token is blacklisted
+	if s.isTokenBlacklisted(tokenString) {
+		return false, errors.New("token has been revoked")
+	}
+
+	// Parse and validate the token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid signing method")
+		}
+		return s.jwtSecret, nil
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	if !token.Valid {
+		return false, errors.New("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return false, errors.New("invalid token claims")
+	}
+
+	// Check if token is expired
+	exp, ok := claims["exp"].(float64)
+	if !ok {
+		return false, errors.New("invalid token expiration")
+	}
+
+	if float64(time.Now().Unix()) > exp {
+		return false, errors.New("token has expired")
+	}
+
+	// Check if user still exists
+	userID := uint(claims["user_id"].(float64))
+	exists, err := s.userRepo.ExistsById(userID)
+	if err != nil {
+		return false, err
+	}
+	if !exists {
+		return false, errors.New("user not found")
+	}
+
+	return true, nil
 }
 
 func (s *AuthService) GeneratePasswordResetToken(email string) (string, error) {
@@ -152,49 +259,4 @@ func (s *AuthService) ResetPassword(resetToken, newPassword string) error {
 	}
 
 	return nil
-}
-
-func (s *AuthService) VerifyToken(tokenString string) (bool, error) {
-	// Parse and validate the token
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// Validate signing method
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New("invalid signing method")
-		}
-		return s.jwtSecret, nil
-	})
-
-	if err != nil {
-		return false, err
-	}
-
-	// Check if token is valid
-	if !token.Valid {
-		return false, errors.New("invalid token")
-	}
-
-	// Get claims
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return false, errors.New("invalid token claims")
-	}
-
-	// Check expiration
-	exp, ok := claims["exp"].(float64)
-	if !ok {
-		return false, errors.New("invalid expiration claim")
-	}
-
-	if float64(time.Now().Unix()) > exp {
-		return false, errors.New("token expired")
-	}
-
-	// Check if user still exists
-	userID := uint(claims["user_id"].(float64))
-	_, err = s.userRepo.FindByID(userID)
-	if err != nil {
-		return false, errors.New("user not found")
-	}
-
-	return true, nil
 } 
