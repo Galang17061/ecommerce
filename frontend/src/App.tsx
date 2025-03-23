@@ -1,19 +1,29 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-import Dashboard from './pages/Dashboard';
+import Products from './pages/Products';
+import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import Navbar from './components/layout/Navbar';
 
 function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Router>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Products />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </Router>
     </div>
