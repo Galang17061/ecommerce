@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaShoppingBag, FaUser, FaLock } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -23,6 +23,9 @@ interface VerifyResponse {
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as any)?.from?.pathname || '/dashboard';
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -44,7 +47,7 @@ const Login = () => {
           });
           
           if (data.valid) {
-            navigate('/dashboard');
+            navigate(from);
             return;
           }
         } catch (err) {
@@ -57,7 +60,7 @@ const Login = () => {
     };
 
     checkAuth();
-  }, [navigate]);
+  }, [navigate, from]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -86,7 +89,7 @@ const Login = () => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
 
       console.log('Login successful:', data);
-      navigate('/dashboard');
+      navigate(from);
     } catch (err: any) {
       console.error('Login error:', err);
       setError(
