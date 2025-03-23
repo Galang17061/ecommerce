@@ -2,7 +2,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingBag, FaUser, FaLock } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 import './Auth.css';
+
+interface LoginResponse {
+  token: string;
+  user?: {
+    id: number;
+    email: string;
+    username: string;
+  };
+  message?: string;
+  error?: string;
+}
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,11 +38,25 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // TODO: Implement login logic
-      console.log('Login attempt:', formData);
-      navigate('/dashboard'); // Redirect to dashboard after successful login
+      const { data } = await axios.post<LoginResponse>('http://localhost:8080/api/auth/login', formData);
+      
+      // Store the token in localStorage
+      localStorage.setItem('token', data.token);
+      
+      // Store user data if returned from backend
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
+
+      console.log('Login successful:', data);
+      navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Login failed. Please try again.');
+      console.error('Login error:', err);
+      setError(
+        err.response?.data?.error || 
+        err.response?.data?.message || 
+        'Login failed. Please check your credentials and try again.'
+      );
     } finally {
       setLoading(false);
     }
