@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaFilter } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaShoppingCart, FaStar, FaHeart } from 'react-icons/fa';
 
 interface Product {
   id: number;
@@ -12,242 +11,145 @@ interface Product {
   discount?: number;
 }
 
-const sampleProducts: Product[] = [
-  {
-    id: 1,
-    name: "Nike Air Max 270",
-    price: 2500000,
-    image: "https://via.placeholder.com/300x300",
-    rating: 4.5,
-    soldCount: 1200,
-    discount: 15
-  },
-  {
-    id: 2,
-    name: "Adidas Ultraboost",
-    price: 2800000,
-    image: "https://via.placeholder.com/300x300",
-    rating: 4.8,
-    soldCount: 950
-  },
-  {
-    id: 3,
-    name: "Samsung Galaxy S21",
-    price: 12000000,
-    image: "https://via.placeholder.com/300x300",
-    rating: 4.7,
-    soldCount: 750,
-    discount: 20
-  },
-  {
-    id: 4,
-    name: "MacBook Pro M1",
-    price: 18000000,
-    image: "https://via.placeholder.com/300x300",
-    rating: 4.9,
-    soldCount: 500
-  },
-  {
-    id: 5,
-    name: "Sony WH-1000XM4",
-    price: 3500000,
-    image: "https://via.placeholder.com/300x300",
-    rating: 4.8,
-    soldCount: 1500,
-    discount: 10
-  },
-  {
-    id: 6,
-    name: "Levi's 501 Original Fit Jeans",
-    price: 800000,
-    image: "https://via.placeholder.com/300x300",
-    rating: 4.6,
-    soldCount: 2500,
-    discount: 30
-  },
-  {
-    id: 7,
-    name: "Nike Dri-FIT Running Shirt",
-    price: 450000,
-    image: "https://via.placeholder.com/300x300",
-    rating: 4.4,
-    soldCount: 3000
-  },
-  {
-    id: 8,
-    name: "Apple Watch Series 7",
-    price: 6000000,
-    image: "https://via.placeholder.com/300x300",
-    rating: 4.7,
-    soldCount: 800,
-    discount: 15
-  }
-];
-
 const Products = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000000]);
-  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const categories = ['all', 'shoes', 'clothing', 'accessories', 'electronics'];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
+  const categories = ['All', 'Shoes', 'Clothing', 'Accessories', 'Electronics'];
+  
+  const sampleProducts: Product[] = [
+    {
+      id: 1,
+      name: "Nike Air Max 270",
+      price: 2500000,
+      image: "https://via.placeholder.com/300x300",
+      rating: 4.5,
+      soldCount: 1200,
+      discount: 15
+    },
+    {
+      id: 2,
+      name: "Adidas Ultraboost",
+      price: 2800000,
+      image: "https://via.placeholder.com/300x300",
+      rating: 4.8,
+      soldCount: 950
     }
-  };
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-white">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-primary-600 to-primary-800 text-white">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-20"></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
             Discover Amazing Products
           </h1>
-          <p className="text-lg text-gray-600">
-            Shop the latest trends with unbeatable prices
+          <p className="text-xl md:text-2xl mb-8 text-primary-100 max-w-2xl animate-slide-up">
+            Shop the latest trends with unbeatable prices and exclusive deals
           </p>
-        </motion.div>
-
-        {/* Filters Section */}
-        <div className="mb-8">
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="md:hidden flex items-center space-x-2 text-purple-600"
-          >
-            <FaFilter />
-            <span>Filters</span>
-          </button>
-
-          <div className={`md:block ${showFilters ? 'block' : 'hidden'}`}>
-            <div className="flex flex-wrap items-center gap-4">
-              {/* Categories */}
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <motion.button
-                    key={category}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      selectedCategory === category
-                        ? 'bg-purple-600 text-white'
-                        : 'bg-white text-gray-700 hover:bg-purple-50'
-                    }`}
-                  >
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </motion.button>
-                ))}
-              </div>
-
-              {/* Price Range */}
-              <div className="flex items-center space-x-4">
-                <input
-                  type="range"
-                  min="0"
-                  max="5000000"
-                  value={priceRange[1]}
-                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                  className="w-32 h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
-                />
-                <span className="text-sm text-gray-600">
-                  Up to {new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  }).format(priceRange[1])}
-                </span>
-              </div>
-            </div>
+          <div className="relative max-w-2xl animate-fade-in">
+            <input
+              type="text"
+              placeholder="Search for products..."
+              className="w-full px-6 py-4 rounded-full text-gray-900 bg-white/95 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 pl-12"
+            />
+            <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
           </div>
         </div>
+      </div>
 
-        {/* Products Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      {/* Categories */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-6 py-2 rounded-full whitespace-nowrap transition-all duration-200 ${
+                selectedCategory === category
+                  ? 'bg-primary-600 text-white shadow-lg transform scale-105'
+                  : 'bg-white text-gray-600 hover:bg-primary-50'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Filter Button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+        <button
+          onClick={() => setIsFilterOpen(!isFilterOpen)}
+          className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
         >
+          <FaFilter className="text-primary-600" />
+          <span>Filters</span>
+        </button>
+      </div>
+
+      {/* Products Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {sampleProducts.map((product) => (
-            <motion.div
+            <div
               key={product.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
-              whileHover={{ y: -5 }}
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
             >
               <div className="relative">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-64 object-cover rounded-t-xl"
                 />
                 {product.discount && (
-                  <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-bold">
+                  <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     -{product.discount}%
                   </div>
                 )}
+                <button className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white">
+                  <FaHeart className="text-red-500" />
+                </button>
               </div>
-              
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
-                  {product.name}
-                </h3>
-                
-                <div className="mb-2">
-                  <span className="text-xl font-bold text-red-500">
-                    {new Intl.NumberFormat('id-ID', {
-                      style: 'currency',
-                      currency: 'IDR',
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    }).format(product.price * (1 - (product.discount || 0) / 100))}
-                  </span>
-                  {product.discount && (
-                    <span className="ml-2 text-sm text-gray-500 line-through">
-                      {new Intl.NumberFormat('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR',
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
-                      }).format(product.price)}
-                    </span>
-                  )}
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="flex items-center text-yellow-400">
-                      {'★'.repeat(Math.floor(product.rating))}
-                      {'☆'.repeat(5 - Math.floor(product.rating))}
-                    </div>
-                    <span className="ml-1 text-sm text-gray-600">({product.rating})</span>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
+                <div className="flex items-center mb-2">
+                  <div className="flex items-center text-yellow-400">
+                    <FaStar />
+                    <span className="ml-1 text-sm text-gray-600">{product.rating}</span>
                   </div>
-                  <span className="text-sm text-gray-500">
-                    {product.soldCount} sold
-                  </span>
+                  <span className="mx-2 text-gray-300">•</span>
+                  <span className="text-sm text-gray-600">{product.soldCount} sold</span>
                 </div>
-                
-                <motion.button
-                  className="w-full mt-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 rounded-md hover:from-purple-700 hover:to-indigo-700"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Add to Cart
-                </motion.button>
+                <div className="flex items-center justify-between">
+                  <div>
+                    {product.discount ? (
+                      <>
+                        <span className="text-lg font-bold text-primary-600">
+                          Rp {(product.price * (1 - product.discount / 100)).toLocaleString()}
+                        </span>
+                        <span className="ml-2 text-sm text-gray-400 line-through">
+                          Rp {product.price.toLocaleString()}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-lg font-bold text-primary-600">
+                        Rp {product.price.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  <button className="bg-primary-600 text-white p-2 rounded-full hover:bg-primary-700 transition-colors duration-200">
+                    <FaShoppingCart />
+                  </button>
+                </div>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </div>
   );
