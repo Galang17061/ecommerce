@@ -30,7 +30,58 @@ const sampleProducts: Product[] = [
     rating: 4.8,
     soldCount: 950
   },
-  // Add more sample products...
+  {
+    id: 3,
+    name: "Samsung Galaxy S21",
+    price: 12000000,
+    image: "https://via.placeholder.com/300x300",
+    rating: 4.7,
+    soldCount: 750,
+    discount: 20
+  },
+  {
+    id: 4,
+    name: "MacBook Pro M1",
+    price: 18000000,
+    image: "https://via.placeholder.com/300x300",
+    rating: 4.9,
+    soldCount: 500
+  },
+  {
+    id: 5,
+    name: "Sony WH-1000XM4",
+    price: 3500000,
+    image: "https://via.placeholder.com/300x300",
+    rating: 4.8,
+    soldCount: 1500,
+    discount: 10
+  },
+  {
+    id: 6,
+    name: "Levi's 501 Original Fit Jeans",
+    price: 800000,
+    image: "https://via.placeholder.com/300x300",
+    rating: 4.6,
+    soldCount: 2500,
+    discount: 30
+  },
+  {
+    id: 7,
+    name: "Nike Dri-FIT Running Shirt",
+    price: 450000,
+    image: "https://via.placeholder.com/300x300",
+    rating: 4.4,
+    soldCount: 3000
+  },
+  {
+    id: 8,
+    name: "Apple Watch Series 7",
+    price: 6000000,
+    image: "https://via.placeholder.com/300x300",
+    rating: 4.7,
+    soldCount: 800,
+    discount: 15
+  }
 ];
 
 const Products = () => {
