@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingBag, FaUser, FaLock } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import './Auth.css';
 
 const Login = () => {
@@ -37,12 +38,21 @@ const Login = () => {
 
   return (
     <div className="auth-container">
-      <div className="auth-box">
+      <motion.div 
+        className="auth-box"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="auth-header">
-          <div className="logo-container">
+          <motion.div 
+            className="logo-container"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
             <FaShoppingBag className="logo-icon" />
             <h1>E-Shop</h1>
-          </div>
+          </motion.div>
           <p className="welcome-text">Welcome back! Please login to your account.</p>
         </div>
 
@@ -89,23 +99,35 @@ const Login = () => {
             <a href="/forgot-password" className="auth-link">Forgot Password?</a>
           </div>
 
-          <button
+          <motion.button
             type="submit"
             disabled={loading}
             className="auth-button"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             {loading ? 'Logging in...' : 'Login'}
-          </button>
+          </motion.button>
 
           <div className="social-login">
             <p>Or login with</p>
             <div className="social-buttons">
-              <button type="button" className="social-button google">
+              <motion.button 
+                type="button" 
+                className="social-button google"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Google
-              </button>
-              <button type="button" className="social-button facebook">
+              </motion.button>
+              <motion.button 
+                type="button" 
+                className="social-button facebook"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Facebook
-              </button>
+              </motion.button>
             </div>
           </div>
 
@@ -113,7 +135,7 @@ const Login = () => {
             Don't have an account? <a href="/register">Register</a>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };
