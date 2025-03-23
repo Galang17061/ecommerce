@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingBag, FaUser, FaLock } from 'react-icons/fa';
 import { motion } from 'framer-motion';
@@ -16,6 +16,11 @@ interface LoginResponse {
   error?: string;
 }
 
+interface VerifyResponse {
+  valid: boolean;
+  message?: string;
+}
+
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -24,6 +29,35 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          // Verify token with backend
+          const { data } = await axios.get<VerifyResponse>('http://localhost:8080/api/auth/verify', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          
+          if (data.valid) {
+            navigate('/dashboard');
+            return;
+          }
+        } catch (err) {
+          // Token is invalid, remove it
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      }
+      setCheckingAuth(false);
+    };
+
+    checkAuth();
+  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -48,6 +82,9 @@ const Login = () => {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
 
+      // Configure axios defaults for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+
       console.log('Login successful:', data);
       navigate('/dashboard');
     } catch (err: any) {
@@ -61,6 +98,22 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  if (checkingAuth) {
+    return (
+      <div className="auth-container">
+        <motion.div 
+          className="auth-box"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="auth-header">
+            <h2>Checking authentication...</h2>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-container">
