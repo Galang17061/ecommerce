@@ -98,7 +98,7 @@ const Products = () => {
           {sampleProducts.map((product) => (
             <div
               key={product.id}
-              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
+              className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group"
             >
               <div className="relative">
                 <img
@@ -129,7 +129,7 @@ const Products = () => {
                   <div>
                     {product.discount ? (
                       <>
-                        <span className="text-lg font-bold text-primary-600">
+                        <span className="text-lg font-bold text-indigo-600">
                           Rp {(product.price * (1 - product.discount / 100)).toLocaleString()}
                         </span>
                         <span className="ml-2 text-sm text-gray-400 line-through">
@@ -137,12 +137,12 @@ const Products = () => {
                         </span>
                       </>
                     ) : (
-                      <span className="text-lg font-bold text-primary-600">
+                      <span className="text-lg font-bold text-indigo-600">
                         Rp {product.price.toLocaleString()}
                       </span>
                     )}
                   </div>
-                  <button className="bg-primary-600 text-white p-2 rounded-full hover:bg-primary-700 transition-colors duration-200">
+                  <button className="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors duration-200">
                     <FaShoppingCart />
                   </button>
                 </div>
