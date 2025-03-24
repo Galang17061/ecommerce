@@ -71,8 +71,8 @@ const Products = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-6 py-2 rounded-full whitespace-nowrap transition-all duration-200 ${
                 selectedCategory === category
-                  ? 'bg-primary-600 text-white shadow-lg transform scale-105'
-                  : 'bg-white text-gray-600 hover:bg-primary-50'
+                  ? 'bg-indigo-600 text-white shadow-lg transform scale-105'
+                  : 'bg-white text-gray-600 hover:bg-indigo-50'
               }`}
             >
               {category}
