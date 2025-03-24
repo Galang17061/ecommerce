@@ -16,8 +16,9 @@ interface Product {
   discount?: number;
 }
 
-// Update the theme with refined dark mode colors
-const theme = createTheme({
+// Create a separate file for theme configuration
+// theme.js
+export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
@@ -36,22 +37,22 @@ const theme = createTheme({
   },
 });
 
-const darkTheme = createTheme({
+export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#3949ab', // Softer blue
+      main: '#3949ab',
     },
     secondary: {
-      main: '#f48fb1', // Softer pink
+      main: '#f48fb1',
     },
     background: {
-      default: '#303030', // Softer dark gray
-      paper: '#424242', // Slightly lighter for cards
+      default: '#303030',
+      paper: '#424242',
     },
     text: {
-      primary: '#e0e0e0', // Softer white
-      secondary: '#bdbdbd', // Softer gray
+      primary: '#e0e0e0',
+      secondary: '#bdbdbd',
     },
   },
 });
@@ -80,13 +81,14 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const productNames = sampleProducts.map(product => product.name);
 
   useEffect(() => {
-    // Simulate loading
     const timer = setTimeout(() => {
       setLoading(false);
+      setOpenSnackbar(true);
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
@@ -103,7 +105,7 @@ const Products = () => {
   const categories = ['All', 'Shoes', 'Clothing', 'Accessories', 'Electronics'];
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : theme}>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <CssBaseline />
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
