@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FaSearch, FaFilter, FaShoppingCart, FaStar, FaHeart } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaShoppingCart, FaStar, FaHeart, FaShoppingBag } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 interface Product {
   id: number;
@@ -45,20 +46,39 @@ const Products = () => {
           <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-20"></div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-            Discover Amazing Products
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-primary-100 max-w-2xl animate-slide-up">
-            Shop the latest trends with unbeatable prices and exclusive deals
-          </p>
-          <div className="relative max-w-2xl animate-fade-in">
-            <input
-              type="text"
-              placeholder="Search for products..."
-              className="w-full px-6 py-4 rounded-full text-gray-900 bg-white/95 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 pl-12"
-            />
-            <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
-          </div>
+          <motion.div 
+            className="auth-container"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <motion.div 
+              className="auth-box"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="auth-header">
+                <motion.div 
+                  className="logo-container"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <FaShoppingBag className="logo-icon" />
+                  <h1>Discover Amazing Products</h1>
+                </motion.div>
+                <p className="welcome-text">Shop the latest trends with unbeatable prices and exclusive deals</p>
+              </div>
+              <div className="relative max-w-2xl animate-fade-in">
+                <input
+                  type="text"
+                  placeholder="Search for products..."
+                  className="w-full px-6 py-4 rounded-full text-gray-900 bg-white/95 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 pl-12"
+                />
+                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
 
