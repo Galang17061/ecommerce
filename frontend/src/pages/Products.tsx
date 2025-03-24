@@ -16,22 +16,42 @@ interface Product {
   discount?: number;
 }
 
-// Update the theme with refined colors
+// Update the theme with refined dark mode colors
 const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#283593', // Darker blue for better contrast
+      main: '#283593',
     },
     secondary: {
-      main: '#f06292', // Softer pink for accents
+      main: '#f06292',
     },
     background: {
-      default: '#f5f5f5', // Light gray for background
+      default: '#f5f5f5',
     },
     text: {
-      primary: '#212121', // Dark gray for text
-      secondary: '#757575', // Medium gray for secondary text
+      primary: '#212121',
+      secondary: '#757575',
+    },
+  },
+});
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#3949ab', // Softer blue
+    },
+    secondary: {
+      main: '#f48fb1', // Softer pink
+    },
+    background: {
+      default: '#303030', // Softer dark gray
+      paper: '#424242', // Slightly lighter for cards
+    },
+    text: {
+      primary: '#e0e0e0', // Softer white
+      secondary: '#bdbdbd', // Softer gray
     },
   },
 });
@@ -83,7 +103,7 @@ const Products = () => {
   const categories = ['All', 'Shoes', 'Clothing', 'Accessories', 'Electronics'];
 
   return (
-    <ThemeProvider theme={createTheme({ palette: { mode: darkMode ? 'dark' : 'light' } })}>
+    <ThemeProvider theme={darkMode ? darkTheme : theme}>
       <CssBaseline />
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
