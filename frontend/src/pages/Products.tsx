@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import { FaSearch, FaFilter, FaShoppingCart, FaStar, FaHeart } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaSearch, FaFilter, FaShoppingCart, FaStar, FaHeart, FaSun, FaMoon, FaArrowUp } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { AppBar, Toolbar, Typography, Button, Container, Grid, Card, CardMedia, CardContent, IconButton, Snackbar, CircularProgress, Autocomplete, TextField, Breadcrumbs, Link, Fab } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Tooltip from '@mui/material/Tooltip';
 
 interface Product {
   id: number;
@@ -11,170 +16,223 @@ interface Product {
   discount?: number;
 }
 
+// Update the theme with refined colors
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#283593', // Darker blue for better contrast
+    },
+    secondary: {
+      main: '#f06292', // Softer pink for accents
+    },
+    background: {
+      default: '#f5f5f5', // Light gray for background
+    },
+    text: {
+      primary: '#212121', // Dark gray for text
+      secondary: '#757575', // Medium gray for secondary text
+    },
+  },
+});
+
+const sampleProducts: Product[] = [
+  {
+    id: 1,
+    name: "Nike Air Max 270",
+    price: 2500000,
+    image: "https://via.placeholder.com/300x300",
+    rating: 4.5,
+    soldCount: 1200,
+    discount: 15
+  },
+  {
+    id: 2,
+    name: "Adidas Ultraboost",
+    price: 2800000,
+    image: "https://via.placeholder.com/300x300",
+    rating: 4.8,
+    soldCount: 950
+  }
+];
+
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const productNames = sampleProducts.map(product => product.name);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleDarkModeToggle = () => {
+    setDarkMode(!darkMode);
+    localStorage.setItem('darkMode', JSON.stringify(!darkMode));
+  };
+
+  const handleBackToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const categories = ['All', 'Shoes', 'Clothing', 'Accessories', 'Electronics'];
-  
-  const sampleProducts: Product[] = [
-    {
-      id: 1,
-      name: "Nike Air Max 270",
-      price: 2500000,
-      image: "https://via.placeholder.com/300x300",
-      rating: 4.5,
-      soldCount: 1200,
-      discount: 15
-    },
-    {
-      id: 2,
-      name: "Adidas Ultraboost",
-      price: 2800000,
-      image: "https://via.placeholder.com/300x300",
-      rating: 4.8,
-      soldCount: 950
-    }
-  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-          <h1 className="text-2xl font-bold text-purple-600">E-Commerce</h1>
-          <nav className="flex space-x-4">
-            <a href="#" className="text-gray-600 hover:text-purple-600">Home</a>
-            <a href="#" className="text-gray-600 hover:text-purple-600">Shop</a>
-            <a href="#" className="text-gray-600 hover:text-purple-600">Contact</a>
-          </nav>
-          <div className="flex items-center">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full max-w-xs bg-gray-100 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <FaSearch className="absolute left-3 text-gray-400" />
-          </div>
+    <ThemeProvider theme={createTheme({ palette: { mode: darkMode ? 'dark' : 'light' } })}>
+      <CssBaseline />
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <CircularProgress />
         </div>
-      </header>
+      ) : (
+        <div>
+          {/* Breadcrumbs */}
+          <Container sx={{ py: 2 }}>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link underline="hover" color="inherit" href="#">
+                Home
+              </Link>
+              <Link underline="hover" color="inherit" href="#">
+                Products
+              </Link>
+              <Typography color="text.primary">All Products</Typography>
+            </Breadcrumbs>
+          </Container>
 
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-purple-600 to-indigo-800 text-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold mb-4">Discover Amazing Products</h2>
-          <p className="text-xl mb-8">Shop the latest trends with unbeatable prices and exclusive deals</p>
-          <button className="bg-white text-purple-600 px-6 py-3 rounded-full shadow-md hover:bg-gray-100">Shop Now</button>
-        </div>
-      </div>
+          {/* Header */}
+          <AppBar position="sticky" sx={{ backgroundColor: 'primary.main' }}>
+            <Toolbar>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                E-Commerce
+              </Typography>
+              <Button color="inherit">Home</Button>
+              <Button color="inherit">Shop</Button>
+              <Button color="inherit">Contact</Button>
+              <Tooltip title="Toggle Dark Mode">
+                <IconButton color="inherit" onClick={handleDarkModeToggle}>
+                  {darkMode ? <FaSun /> : <FaMoon />}
+                </IconButton>
+              </Tooltip>
+              <Autocomplete
+                freeSolo
+                options={productNames}
+                renderInput={(params) => <TextField {...params} label="Search products..." variant="outlined" />}
+                sx={{ width: 300, marginLeft: 2 }}
+              />
+            </Toolbar>
+          </AppBar>
 
-      {/* Categories */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
-          {categories.map((category) => (
-            <div key={category} className="flex flex-col items-center">
-              <div className="bg-white p-4 rounded-full shadow-md mb-2">
-                <FaShoppingCart className="text-purple-600 text-2xl" />
-              </div>
-              <button
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full whitespace-nowrap transition-all duration-200 ${
-                  selectedCategory === category
-                    ? 'bg-indigo-600 text-white shadow-lg transform scale-105'
-                    : 'bg-white text-gray-600 hover:bg-indigo-50'
-                }`}
-              >
-                {category}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+          {/* Hero Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            style={{ background: 'linear-gradient(to right, #283593, #5c6bc0)', color: 'white', padding: '50px 0', textAlign: 'center' }}
+          >
+            <Container>
+              <Typography variant="h3" gutterBottom>Discover Amazing Products</Typography>
+              <Typography variant="h5" gutterBottom>Shop the latest trends with unbeatable prices and exclusive deals</Typography>
+              <Button variant="contained" color="secondary">Shop Now</Button>
+            </Container>
+          </motion.div>
 
-      {/* Products Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {sampleProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group"
-            >
-              <div className="relative">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-64 object-cover rounded-t-xl"
-                />
-                {product.discount && (
-                  <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    -{product.discount}%
-                  </div>
-                )}
-                <button className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white">
-                  <FaHeart className="text-red-500" />
-                </button>
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex items-center text-yellow-400">
-                    <FaStar />
-                    <span className="ml-1 text-sm text-gray-600">{product.rating}</span>
-                  </div>
-                  <span className="mx-2 text-gray-300">•</span>
-                  <span className="text-sm text-gray-600">{product.soldCount} sold</span>
-                </div>
-                <div className="flex items-center justify-between">
+          {/* Categories */}
+          <Container sx={{ py: 3 }}>
+            <Grid container spacing={2} justifyContent="center">
+              {categories.map((category) => (
+                <Grid item key={category}>
+                  <motion.div whileHover={{ scale: 1.1 }}>
+                    <Tooltip title={`View ${category} products`}>
+                      <Button variant={selectedCategory === category ? "contained" : "outlined"} onClick={() => setSelectedCategory(category)}>
+                        {category}
+                      </Button>
+                    </Tooltip>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+
+          {/* Products Grid */}
+          <Container sx={{ py: 5 }}>
+            <Grid container spacing={4}>
+              {sampleProducts.map((product) => (
+                <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+                  <motion.div whileHover={{ scale: 1.05 }}>
+                    <Card>
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image={product.image}
+                        alt={product.name}
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {product.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {product.rating} <FaStar /> | {product.soldCount} sold
+                        </Typography>
+                        <Typography variant="h6" color="primary">
+                          Rp {(product.price * (1 - (product.discount || 0) / 100)).toLocaleString()}
+                        </Typography>
+                        {product.discount && (
+                          <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
+                            Rp {product.price.toLocaleString()}
+                          </Typography>
+                        )}
+                      </CardContent>
+                      <Tooltip title="Add to Wishlist">
+                        <IconButton color="primary">
+                          <FaHeart />
+                        </IconButton>
+                      </Tooltip>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+
+          {/* Enhanced Footer */}
+          <footer style={{ backgroundColor: '#283593', color: '#fff', padding: '40px 0', textAlign: 'center' }}>
+            <Container>
+              <Grid container spacing={4} justifyContent="center">
+                <Grid item xs={12} sm={4}>
+                  <Typography variant="h6">About Us</Typography>
+                  <Typography variant="body2">Learn more about our company and values.</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Typography variant="h6">Customer Service</Typography>
+                  <Typography variant="body2">Contact us for support and inquiries.</Typography>
+                  <Typography variant="body2">Shipping & Returns</Typography>
+                  <Typography variant="body2">FAQs</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Typography variant="h6">Follow Us</Typography>
                   <div>
-                    {product.discount ? (
-                      <>
-                        <span className="text-lg font-bold text-indigo-600">
-                          Rp {(product.price * (1 - product.discount / 100)).toLocaleString()}
-                        </span>
-                        <span className="ml-2 text-sm text-gray-400 line-through">
-                          Rp {product.price.toLocaleString()}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-lg font-bold text-indigo-600">
-                        Rp {product.price.toLocaleString()}
-                      </span>
-                    )}
+                    <Button color="inherit">Facebook</Button>
+                    <Button color="inherit">Twitter</Button>
+                    <Button color="inherit">Instagram</Button>
                   </div>
-                  <button className="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                    <FaShoppingCart />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+                  <Typography variant="body2">Subscribe to our newsletter</Typography>
+                </Grid>
+              </Grid>
+            </Container>
+          </footer>
 
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between">
-            <div>
-              <h3 className="text-lg font-bold mb-2">About Us</h3>
-              <p className="text-sm">Learn more about our company and values.</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-2">Customer Service</h3>
-              <p className="text-sm">Contact us for support and inquiries.</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-2">Follow Us</h3>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white">Facebook</a>
-                <a href="#" className="text-gray-400 hover:text-white">Twitter</a>
-                <a href="#" className="text-gray-400 hover:text-white">Instagram</a>
-              </div>
-            </div>
-          </div>
+          {/* Back to Top Button */}
+          <Fab color="secondary" aria-label="back to top" onClick={handleBackToTop} sx={{ position: 'fixed', bottom: 16, right: 16 }}>
+            <FaArrowUp />
+          </Fab>
         </div>
-      </footer>
-    </div>
+      )}
+    </ThemeProvider>
   );
 };
 
