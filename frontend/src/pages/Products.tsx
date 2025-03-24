@@ -46,12 +46,7 @@ const Products = () => {
           <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-20"></div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative">
-          <motion.div 
-            className="auth-container"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="auth-container">
             <motion.div 
               className="auth-box"
               initial={{ opacity: 0, y: 20 }}
@@ -73,12 +68,69 @@ const Products = () => {
                 <input
                   type="text"
                   placeholder="Search for products..."
-                  className="w-full px-6 py-4 rounded-full text-gray-900 bg-white/95 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 pl-12"
+                  className="w-full px-6 py-4 rounded-full text-gray-900 bg-white/95 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 pl-12"
                 />
                 <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
+                {sampleProducts.map((product) => (
+                  <motion.div
+                    key={product.id}
+                    className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <div className="relative">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-64 object-cover rounded-t-xl"
+                      />
+                      {product.discount && (
+                        <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          -{product.discount}%
+                        </div>
+                      )}
+                      <button className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white">
+                        <FaHeart className="text-red-500" />
+                      </button>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
+                      <div className="flex items-center mb-2">
+                        <div className="flex items-center text-yellow-400">
+                          <FaStar />
+                          <span className="ml-1 text-sm text-gray-600">{product.rating}</span>
+                        </div>
+                        <span className="mx-2 text-gray-300">•</span>
+                        <span className="text-sm text-gray-600">{product.soldCount} sold</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          {product.discount ? (
+                            <>
+                              <span className="text-lg font-bold text-indigo-600">
+                                Rp {(product.price * (1 - product.discount / 100)).toLocaleString()}
+                              </span>
+                              <span className="ml-2 text-sm text-gray-400 line-through">
+                                Rp {product.price.toLocaleString()}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="text-lg font-bold text-indigo-600">
+                              Rp {product.price.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+                        <button className="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors duration-200">
+                          <FaShoppingCart />
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
