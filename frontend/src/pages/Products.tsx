@@ -85,9 +85,9 @@ const Products = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
         <button
           onClick={() => setIsFilterOpen(!isFilterOpen)}
-          className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+          className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
         >
-          <FaFilter className="text-primary-600" />
+          <FaFilter className="text-white" />
           <span>Filters</span>
         </button>
       </div>
